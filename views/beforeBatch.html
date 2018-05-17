@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/css/weui.css">
+    <title>绑定游戏ID页面</title>
+</head>
+<body>
+	<div class="page__hd">
+        <h1 class="page__title" style="text-align:center;padding-top:5%">账号绑定</h1>
+        <p class="page__desc">提示:将游戏账号与微信绑定，可以参与微信公众号中的活动或小游戏领取奖励</p>
+    </div>
+    <div class="weui-cells weui-cells_form" style='margin-top:20%'>
+            <div class="weui-cell weui-cell_vcode">
+                <div class="weui-cell__hd">
+                    <label class="weui-label">游戏ID</label>
+                </div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" id='uid'  placeholder="请输入游戏ID">
+                </div>
+                <div class="weui-cell__ft">
+                    <button class="weui-vcode-btn" id='getCheckCode'>获取验证码</button>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">验证码</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" id='checkCode'  placeholder="请输入游戏邮箱收到的验证码">
+                </div>
+            </div>
+        </div>
+
+       <!-- <label for="weuiAgree" class="weui-agree">
+            <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox">
+            <span class="weui-agree__text">
+                阅读并同意<a href="javascript:void(0);">《相关条款》</a>
+            </span>
+        </label>-->
+
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" href="javascript:" id="showTooltips">确定</a>
+        </div>
+
+
+        <div id="dialogs">
+		    <div class="js_dialog" id="iosDialog1" style="opacity: 1;display:none;">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
+                    <div class="weui-dialog__bd">请您查看游戏中邮件收到的验证码，并输入到下面验证栏中</div>
+                    <div class="weui-dialog__ft">
+                        <a href="javascript:$('#iosDialog1').hide();" class="weui-dialog__btn weui-dialog__btn_primary">确定</a>
+                    </div>
+                </div>
+        	</div>
+			<div class="js_dialog" id="iosDialog2" style="display: none;">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">错误提示</strong></div>
+                    <div class="weui-dialog__bd">验证码没生成成功，请重新获取验证码</div>
+                    <div class="weui-dialog__ft">
+                        <a href="javascript:$('#iosDialog2').hide();" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                    </div>
+                </div>
+		    </div>
+            <div class="js_dialog" id="iosDialog3" style="display: none;">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">系统错误</strong></div>
+                    <div class="weui-dialog__bd">系统异常,请您稍后再试</div>
+                    <div class="weui-dialog__ft">
+                        <a href="javascript:$('#iosDialog3').hide();;" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                    </div>
+                </div>
+		    </div>
+              <div class="js_dialog" id="iosDialog4" style="display: none;">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">绑定失败</strong></div>
+                    <div class="weui-dialog__bd">微信与游戏账号绑定失败，请您核对验证码或游戏I</div>
+                    <div class="weui-dialog__ft">
+                        <a href="javascript:$('#iosDialog4').hide();;" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                    </div>
+                </div>
+		    </div>
+             <div class="js_dialog" id="iosDialog5" style="display: none;">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">错误提示</strong></div>
+                    <div class="weui-dialog__bd">游戏ID或验证码不能为空，请您输入游戏ID或验证码</div>
+                    <div class="weui-dialog__ft">
+                        <a href="javascript:$('#iosDialog5').hide();;" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                    </div>
+                </div>
+		    </div>
+             <div class="js_dialog" id="iosDialog6" style="display: none;">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">错误提示</strong></div>
+                    <div class="weui-dialog__bd">请阅读相关条款，并接受</div>
+                    <div class="weui-dialog__ft">
+                        <a href="javascript:$('#iosDialog6').hide();;" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                    </div>
+                </div>
+		    </div>
+			<div class="js_dialog" id="iosDialog7" style="display: none;">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">错误提示</strong></div>
+                    <div class="weui-dialog__bd">请输入游戏ID，获取验证码</div>
+                    <div class="weui-dialog__ft">
+                        <a href="javascript:$('#iosDialog7').hide();;" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                    </div>
+                </div>
+		    </div>
+	</div>
+ 	 <div class="weui-msg__extra-area">
+            <div class="weui-footer">
+                <p class="weui-footer__links">
+                    <a href="http://www.wmcyou.com/" class="weui-footer__link">玩美创游</a>
+                </p>
+                <p class="weui-footer__text">Copyright © 2008-2018 www.wmcyou.com</p>
+            </div>
+        </div>   
+</body>
+<script src="/js/weui.js"></script>
+<script src="/js/zepto.min.js"></script>
+<script>
+    var $iosDialog1 = $('#iosDialog1');
+    var $iosDialog2 = $('#iosDialog2');
+    var $iosDialog3 = $('#iosDialog3');
+    var $iosDialog4 = $('#iosDialog4');
+	var $iosDialog5 = $('#iosDialog5');
+    var $iosDialog6 = $('#iosDialog6');
+    var $iosDialog7 = $('#iosDialog7');
+
+	var access_token='<%= access_token %>'
+	var expires_in='<%= expires_in %>'
+	var refresh_token='<%= refresh_token %>'
+	var openid='<%= openid %>'
+	var scopes='<%= scopes %>'
+	var postData={
+            access_token:access_token,
+            expires_in:expires_in,
+            refresh_token:refresh_token,
+            openid:openid,
+            scope:scopes,
+        };
+	
+    $('#getCheckCode').on('click',function(e){
+        var uid=$('#uid').val();
+		if(!uid){
+			$iosDialog7.show();
+			return;
+		}
+		postData.uid=uid;
+        $.ajax({
+            type: 'POST',
+            url: '/cognate/checkCode',
+            data:postData,
+            dataType: 'json',
+			success: function(data){
+				if(data.errcode=='0'){
+					$iosDialog1.show();
+				}else{
+					$iosDialog2.show();
+				}
+			},
+			error: function(xhr, type,error){
+				$iosDialog3.show();
+  			}	
+        })
+    });
+
+    $('#showTooltips').on('click',function(e){
+        var uid=$('#uid').val()
+        var checkCode=$('#checkCode').val();
+	//	var weuiAgree=$('#weuiAgree').prop("checked");
+		if(!uid && !checkCode){
+			$iosDialog5.show();
+	//	}else if(!weuiAgree){
+	//		$iosDialog6.show();
+		}else{
+			postData.uid=uid;
+       		postData.checkCode=checkCode;
+        	$.ajax({
+            	type: 'POST',
+            	url: '/cognate/bind',
+            	data:postData,
+            	dataType: 'json',
+				success: function(data){
+  		              if(data.errcode=='0'){
+							location.href=data.redirect_uri
+               		  }else{
+        		            $iosDialog4.show();
+					  }
+            	},
+            	error: function(xhr, type,error){
+                	$iosDialog3.show();
+            	} 
+        	})
+
+		}
+    })
+	
+</script>
+</html>
+

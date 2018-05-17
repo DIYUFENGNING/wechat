@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="/css/weui.css">
+	<title>商城页面</title>
+</head>
+<body>
+	   <div class="page__hd">
+       	 	<h1 class="page__title" style="text-align:center">游戏商城</h1>
+        	<p class="page__desc" style="color: #888;">游戏账号:<%= uid %></p>
+       </div>
+	   
+		<div class="page__bd" style="height: 100%;margin-top:8%">
+        <div class="weui-tab">
+            <div class="weui-navbar">
+                <div class="weui-navbar__item weui-bar__item_on" style="color: #353535;border: 1px solid #353535;border-radius: 10px;">
+                   	金币
+                </div>
+                <div class="weui-navbar__item" style="color: #353535;border: 1px solid #353535;border-radius: 10px;">
+                    钻石
+                </div>
+            </div>
+            <div class="weui-tab__panel" style="padding-top:20%">
+				<div id="coin"class="weui-tab__content" style="display:inline">
+					<!-- 金币panel开始 -->
+						<div class="weui-grids">
+							<% coinArr.forEach(function(item){%>
+							<div onclick="say(this)"  class="weui-grid" >
+            					<div class="weui-grid__icon">
+                					<img src="<%= item.itemImg %>" alt="">
+            					</div>
+            					<p class="weui-grid__label" style="color:gold;font-weight:bold"><%= item.itemNum %>万游戏金币</p>
+            					<p class="weui-grid__label"><%= item.itemPrice %>元人民币</p>
+							<!--	<span style="display:none"><%= item.itemId %></span>-->
+								<span style="display:none"><%= item.goodsId %></span>
+        					</div>
+							<% }) %>
+						</div>
+					<!-- 金币panel结束 -->			
+                </div>
+                <div id='diamand' class="weui-tab__content">
+					<!-- 钻石panel开始 -->
+						<div class="weui-grids">
+							<% diamandArr.forEach(function(item){%>
+							<div  onclick="say(this)"  class="weui-grid">
+                                <div class="weui-grid__icon">
+                                    <img src="<%= item.itemImg %>" alt="">
+                                </div>
+                                <p class="weui-grid__label" style="color:#9932CC;font-weight:bold"><%= item.itemNum %>游戏钻石</p>
+                                <p class="weui-grid__label"><%= item.itemPrice %>元人民币</p>
+							<!--	<span style="display:none"><%= item.itemId %></span>-->
+								<span style="display:none"><%= item.goodsId %></span>
+                            </div>
+							<% }) %>
+                        </div>
+					<!-- 钻石panel结束 -->
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	   <div class="weui-msg__extra-area">
+            <div class="weui-footer">
+                <p class="weui-footer__links">
+                    <a href="http://www.wmcyou.com/" class="weui-footer__link">玩美创游</a>
+                </p>
+                <p class="weui-footer__text">Copyright © 2008-2018 www.wmcyou.com</p>
+            </div>
+     </div>
+	
+	<div class="js_dialog" id="iosDialog1" style="opacity: 1;display:none;">
+         <div class="weui-mask"></div>
+         <div class="weui-dialog">
+              <div class="weui-dialog__hd"><strong class="weui-dialog__title">是否购买</strong></div>
+              <div class="weui-dialog__bd" id="good">aaaa</div>
+              <div class="weui-dialog__ft">
+                 <a href="javascript:$('#iosDialog1').hide();" class="weui-dialog__btn weui-dialog__btn_default">取消购买</a>
+                 <a onclick="buy()" class="weui-dialog__btn weui-dialog__btn_primary">确定购买</a>
+             </div>
+        </div>
+   </div>  
+	
+</body>
+<script src="/js/weui.js"></script>
+<script src="/js/zepto.min.js"></script>
+<script>
+    	var $iosDialog1=$('#iosDialog1');
+		var uid="<%= uid %>"
+		var openid="<%= openid %>"
+		var goodsNum;
+		var goodsId;
+		var orderInfo;
+        $('.weui-navbar__item').on('click', function (e) {
+            $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+			var index = $(this).index();
+			if(index==0){
+				$('#coin').show();
+				$('#diamand').hide();
+			}else{
+				$('#coin').hide();
+                $('#diamand').show();
+			}
+        });
+		function say(e){
+			goodsNum=$(e).find('p')[0].innerHTML;
+			goodsId=$(e).find('span').html();
+			$iosDialog1.find('div[id="good"]').html(goodsNum);
+			$iosDialog1.show();
+			
+		}
+		function buy(){
+			var userData={"uid":uid,"extra":openid,"goodsId":goodsId};
+			console.dir(userData)
+			$.ajax({
+				type:'POST',
+				url:"/mall/order",
+				data:userData,
+				dataType:'json',
+				success:function(data){
+					orderInfo=data;
+					callpay()
+				},
+				error:function(e){
+					console.log("11111111")
+					console.log(e)
+				}
+			})
+			//callpay();
+		}
+		 function jsApiCall(){
+			console.dir(orderInfo.extra)
+             WeixinJSBridge.invoke(
+             	'getBrandWCPayRequest',
+				orderInfo.extra,
+                function (res){
+                   WeixinJSBridge.log(res.err_msg);
+                   alert(res.err_code + res.err_desc + res.err_msg);
+                }
+              );
+          }
+		   function callpay(){
+               if (typeof WeixinJSBridge == "undefined"){
+                   if (document.addEventListener){
+                        document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+                   }else if (document.attachEvent){
+                        document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                        document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+                  }
+               }else{
+                  jsApiCall();
+               }
+          }
+</script>
+</html>

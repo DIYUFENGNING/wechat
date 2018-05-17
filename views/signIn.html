@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>签到页面</title>
+    <link rel="stylesheet" href="/css/weui.css">
+</head>
+<body>
+
+
+	<div class="page preview js_show">
+    <div class="page__hd">
+		<%if (uid) {%>
+        	<p class="page__desc">游戏ID:<%= uid %></p>
+    	<% }else{ %>
+        	<p class="page__desc">游戏ID:未绑定</p>
+    	<% } %>
+    </div>
+    <div class="page__bd" style="margin-top:25%">
+		<div style="text-align:center"><img src='<%= AwardArr.itemImg %>'  style="width:20%;height:20%"></div>
+		<div style="text-align:center"><%= AwardArr.itemName %>X<%= AwardArr.itemNum %></div>
+        <button class="weui-btn weui-btn_mini weui-btn_primary" style="margin-left:39%;margin-top:10%" id="goget">签到领取</button>
+        <button class="weui-btn weui-btn_mini weui-btn_plain-disabled" style="margin-left:38%;margin-top:10%" id="getted">已签到领取</button>
+    </div>
+    </div>
+	<div class="weui-msg__extra-area">
+            <div class="weui-footer">
+                <p class="weui-footer__links">
+                    <a href="http://www.wmcyou.com/" class="weui-footer__link">玩美创游</a>
+                </p>
+                <p class="weui-footer__text">Copyright © 2008-2018 www.wmcyou.com</p>
+            </div>
+     </div>
+	
+	 <div class="js_dialog" id="iosDialog1" style="opacity: 1;display:none;">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">领取成功</strong></div>
+                    <div class="weui-dialog__bd">奖品已经发放到你的游戏中</div>
+                    <div class="weui-dialog__ft">
+                        <a href="javascript:$('#iosDialog1').hide();" class="weui-dialog__btn weui-dialog__btn_default">停留在此页面</a>
+                        <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-dialog__btn weui-dialog__btn_primary">返回到公众号</a>
+                    </div>
+                </div>
+            </div>
+            <div class="js_dialog" id="iosDialog2" style="display: none;">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">领取失败</strong></div>
+                    <div class="weui-dialog__bd">奖品领取失败，请您重新进入签到页面领取</div>
+                    <div class="weui-dialog__ft">
+                        <a href="javascript:WeixinJSBridge.call('closeWindow');" class="weui-dialog__btn weui-dialog__btn_primary">返回到公众号</a>
+                    </div>
+                </div>
+            </div>
+            <div class="js_dialog" id="iosDialog3" style="display: none;">
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__hd"><strong class="weui-dialog__title">系统错误</strong></div>
+                    <div class="weui-dialog__bd">请查看网络，请您稍后再试</div>
+                    <div class="weui-dialog__ft">
+                        <a href="javascript:$('#iosDialog3').hide();;" class="weui-dialog__btn weui-dialog__btn_primary">知道了</a>
+                    </div>
+                </div>
+            </div>
+	 </div>
+</body>
+<script src="/js/weui.js"></script>
+<script src="/js/zepto.min.js"></script>
+<script>
+	//$("#goget").attr({"disabled":"true"});
+	function showBtn(boolData){
+		if(!boolData){
+			$("#goget").show();
+			$("#getted").hide();
+		}else{
+			$("#goget").hide();
+			$("#getted").show();
+		}
+	}
+	var $iosDialog1 = $('#iosDialog1');
+    var $iosDialog2 = $('#iosDialog2');
+    var $iosDialog3 = $('#iosDialog3');
+	var isGet=<%= isGet %>
+	var postData={
+		uid:'<%= uid %>',
+		openId:'<%= openId %>',
+		itemName:'<%= AwardArr.itemName %>',
+		itemId:'<%= AwardArr.itemId %>',
+		itemNum:'<%= AwardArr.itemNum %>',
+	}
+	showBtn(isGet);
+	$("#goget").one('click',function(e){
+		$.ajax({
+			type:'POST',
+			url:'/welfare/getAward',
+			data:postData,
+			dataType:'json',
+			success:function(data){
+				if(data.errcode=='0'){
+					var et=true;
+					showBtn(et);
+					$iosDialog1.show();
+				}else{
+					$iosDialog2.show();
+				}
+			},
+			error:function(xhr,type,error){
+				$iosDialog3.show();
+			}
+		})
+	})
+</script>
+</html>

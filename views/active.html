@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie-edge">
+	<link rel="stylesheet" href="/css/weui.css">
+	<title>活动选择页面</title>
+</head>
+<body>
+
+
+	<div class="page panel js_show">
+    <div class="page__hd">
+        <h1 class="page__title" style="text-align:center">活动中心</h1>
+        <p class="page__desc" style="margin-left:4%">游戏账号:<%= uid %></p>
+    </div>
+    <div class="page__bd">
+        <div class="weui-panel weui-panel_access">
+            <div class="weui-panel__hd">请选择自己想要参与的活动</div>
+            <div class="weui-panel__bd">
+				<% activeArr.forEach(function(item){ %>
+                <a href="<%= item.activeUrl %>" class="weui-media-box weui-media-box_appmsg">
+                    <div class="weui-media-box__hd">
+                        <img class="weui-media-box__thumb" src="<%= item.activeIcon %>" alt="">
+                    </div>
+                    <div class="weui-media-box__bd">
+                        <h4 class="weui-media-box__title"><%= item.activeName %></h4>
+                        <p class="weui-media-box__desc"><%= item.activeDesc %></p>
+                    </div>
+                </a>
+				<% }) %>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+	 <div class="weui-msg__extra-area">
+         <div class="weui-footer">
+             <p class="weui-footer__links">
+                  <a href="http://www.wmcyou.com/" class="weui-footer__link">玩美创游</a>
+             </p>
+             <p class="weui-footer__text">Copyright © 2008-2018 www.wmcyou.com</p>
+         </div>
+     </div>
+
+
+</body>
+<script src="/js/weui.js"></script>
+<script src="/js/zepto.min.js"></script>
+</html>
